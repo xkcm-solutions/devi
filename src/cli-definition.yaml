@@ -1,0 +1,14 @@
+name: devi
+version: "0.1.0"
+author: xkcm-solutions <xkcm16@gmail.com>
+args:
+subcommands:
+    - postgres:
+        about: Managing local PostgreSQL server, purely for development, do not use for production
+        version: "0.1.0"
+        author: xkcm-solutions <xkcm16@gmail.com>
+        subcommands:
+            - start:
+                about: Start local PostgreSQL server
+            - stop:
+                about: Stop local PostgreSQL server
