@@ -6,8 +6,8 @@ use std::process::Command;
 use clap::ArgMatches;
 use colored::Colorize;
 
-static CONTAINER_ID_FILEPATH: &str = "postgres/.container_id";
-static DOCKER_IMAGE: &str = "postgres";
+const CONTAINER_ID_FILEPATH: &str = "postgres/.container_id";
+const DOCKER_IMAGE: &str = "postgres";
 
 pub async fn postgres_cli<'a>(args: &ArgMatches<'a>) {
   match args.subcommand_name() {
@@ -28,11 +28,13 @@ async fn start() {
   let output = Command::new("docker")
     .arg("run")
     .args(["--name", "devi_local-postgres-server"])
-    .args(["-e", &format!("POSTGRES_PASSWORD={}", password)])
-    .args(["-e", &format!("POSTGRES_USER={}", user)])
+    .args(["-e", "POSTGRES_PASSWORD"])
+    .args(["-e", "POSTGRES_USER"])
     .args(["-v", "devi_postgres-data:/var/lib/postgresql/data"])
     .args(["-d", "--rm", "-p", format!("{0}:{0}", port).as_str()])
     .arg(DOCKER_IMAGE)
+    .env("POSTGRES_PASSWORD", password)
+    .env("POSTGRES_USER", user)
     .output()
     .expect("Failed to start the PostgreSQL server Docker container!");
 
@@ -54,7 +56,7 @@ async fn start() {
     None => {}
   }
 
-  println!("{}", "PostgreSQL server running".green());
+  println!("{}", "PostgreSQL server running".green().bold());
 }
 
 async fn stop() {
@@ -69,7 +71,7 @@ async fn stop() {
 
   save_container_id("");
 
-  println!("{}", "PostgreSQL server stopped".green())
+  println!("{}", "PostgreSQL server stopped".green().bold())
 }
 
 fn save_container_id(container_id: &str) {
