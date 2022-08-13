@@ -75,7 +75,7 @@ dependencies = [
 
 [[package]]
 name = "devi"
-version = "0.1.0"
+version = "0.1.0-beta"
 dependencies = [
  "clap",
  "colored",

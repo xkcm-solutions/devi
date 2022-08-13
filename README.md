@@ -1,8 +1,10 @@
 # devi
 
-Development CLI tool containing useful commands/tools for various software development. Extensible, based on modules/plugins, built in Rust.
+**( Work In Progress )**
 
-## Example usage
+Development CLI tool containing useful commands/tools for various software development. Extensible, based on modules/plugins, built in Rust. 
+
+## Example usage (concept)
 Running local FTP server:
 ```sh
 devi ftp-server run -c admin:admin
@@ -23,4 +25,22 @@ Encrypting/decrypting data with AES:
 ```sh
 devi aes encrypt -k <key> <data>    # <cipher>
 devi aes decrypt -k <key> <cipher>  # <data>
+```
+
+## Installation
+
+Clone the repo and build the binary with
+```
+cargo build --release
+```
+Then run the `./install.sh` script with sudo, the script copies the binary into the `/usr/bin` path (if this directory is not in your $PATH, feel free to modify the script)
+```
+sudo ./install.sh
+```
+
+## Working features
+
+Right now there is only a basic functionality for running local *PostgreSQL* server in a Docker container
+```
+devi postgres --help
 ```
