@@ -1,11 +1,13 @@
-use clap::ArgMatches;
+use crate::utils::{read_data_file, save_data_file};
 
 use core::panic;
 use std::process::Command;
-use std::fs::{File, read_to_string};
-use std::io::Write;
 
+use clap::ArgMatches;
 use colored::Colorize;
+
+static CONTAINER_ID_FILEPATH: &str = "postgres/.container_id";
+static DOCKER_IMAGE: &str = "postgres";
 
 pub async fn postgres_cli<'a>(args: &ArgMatches<'a>) {
   match args.subcommand_name() {
@@ -22,16 +24,15 @@ async fn start() {
   let password = "root";
   let user = "root";
   let port: i16 = 5432;
-  let docker_image = "postgres";
 
   let output = Command::new("docker")
     .arg("run")
     .args(["--name", "devi_local-postgres-server"])
-    .args(["-e", format!("POSTGRES_PASSWORD={}", password).as_str()])
-    .args(["-e", format!("-e POSTGRES_USER={}", user).as_str()])
+    .args(["-e", &format!("POSTGRES_PASSWORD={}", password)])
+    .args(["-e", &format!("POSTGRES_USER={}", user)])
     .args(["-v", "devi_postgres-data:/var/lib/postgresql/data"])
     .args(["-d", "--rm", "-p", format!("{0}:{0}", port).as_str()])
-    .arg(docker_image)
+    .arg(DOCKER_IMAGE)
     .output()
     .expect("Failed to start the PostgreSQL server Docker container!");
 
@@ -72,12 +73,11 @@ async fn stop() {
 }
 
 fn save_container_id(container_id: &str) {
-  let mut container_id_file = File::create("./.container_id").unwrap();
-  write!(&mut container_id_file, "{}", container_id).unwrap();
+  save_data_file(CONTAINER_ID_FILEPATH, container_id);
 }
 
 fn read_container_id() -> String {
-  let container_id = read_to_string("./.container_id").unwrap();
+  let container_id = read_data_file(CONTAINER_ID_FILEPATH);
   if container_id == "" {
     panic!("Docker container ID is unknown, can't stop the container")
   }

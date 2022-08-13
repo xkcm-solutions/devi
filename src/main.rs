@@ -1,8 +1,10 @@
 mod commands;
+mod utils;
 
 use std::str::FromStr;
 
 use clap::{load_yaml, App};
+
 use commands::Commands;
 
 #[tokio::main]
